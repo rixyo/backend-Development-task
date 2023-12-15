@@ -1,0 +1,39 @@
+service: serverless-notes-server
+
+useDotenv: true
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: eu-north-1
+  profile: ServerlessAccount
+  environment:
+    DATABASE_URL: ${env:DATABASE_URL}
+  timeout: 15
+package: 
+    excludeDevDependencies: true
+    exclude:
+    - node_modules/**
+    - .gitignore
+    - .git/**
+    - .env
+    - .eslintrc.js
+    - .prettierrc.js
+    - 1702645034747-migrations.ts
+    - docker-compose.yml
+    - docker-compose.override.yml
+    - README.md
+
+functions:
+  main:
+    handler: dist/serverless.handler
+    events:
+      - http:
+          method: ANY
+          path: /
+      - http:
+          method: ANY
+          path: '{proxy+}'
